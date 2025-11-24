@@ -1,0 +1,23 @@
+source_text = span ;
+
+span = { text | variable | branch | loop | escaped_token } ;
+
+text = T::TextBlock ;
+
+variable = T::CodeBlockStart, T::Identifier, T::CodeBlockEnd ;
+
+branch = if_header, span, [ else, span ], endif ;
+
+if_header = T::CodeBlockStart, T::If, '(', [ '!' ], T::Identifier, ')', T::CodeBlockEnd ;
+
+else = T::CodeBlockStart, T::Else, T::CodeBlockEnd ;
+
+endif = T::CodeBlockStart, T::EndIf, T::CodeBlockEnd ;
+
+loop = for_header, span, endfor ;
+
+for_header = T::CodeBlockStart, T::For, '(', T::Identifier, ':', T::Identifier, ')', T::CodeBlockEnd ;
+
+endfor = T::CodeBlockStart, T::EndFor, T::CodeBlockEnd ;
+
+escaped_token = ( T::EscapedBackslash | T::EscapedCodeBlockStart ) ;

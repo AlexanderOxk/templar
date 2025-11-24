@@ -1,0 +1,13 @@
+enable_testing()
+
+add_executable(unittests example.cpp)
+
+target_include_directories(unittests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(unittests PRIVATE UNITTESTS)
+
+add_test(
+    NAME unittests
+    COMMAND $<TARGET_FILE:unittests>
+)
+
+set_tests_properties(unittests PROPERTIES TIMEOUT 60)

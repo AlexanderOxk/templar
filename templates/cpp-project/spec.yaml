@@ -1,0 +1,61 @@
+name: "cpp-project"
+
+options:
+  - project-name:
+    nargs: "1"
+    type: string
+    description: |
+      The name of the project.
+  - include-tests:
+    nargs: "1"
+    type: bool
+    default: true
+    description: |
+      Option to include tests/ dir with a unittest target.
+  - include-clang-dotfiles:
+    nargs: "1"
+    type: bool
+    default: true
+    description: |
+      Include clang-format and clang-tidy config files.
+  - libraries:
+    nargs: "*"
+    type: string
+    description: |
+      Any number of libraries to add to the src/ dir. This will also add
+      include/<project-name>/<libs> dirs in the root for public headers.
+
+targets:
+  - "<%project-name%>/CMakeLists.txt":
+    source: "root_cmakelists.templ"
+
+  - "<%project-name%>/.gitignore":
+    source: "root_gitignore.templ"
+
+  - "<%project-name%>/src/CMakeLists.txt":
+    source: "src_cmakelists.templ"
+  - "<%project-name%>/src/<%project-name%>":
+    source: "src_main.templ"
+
+  - "<%project-name%>/scripts/clang-format.sh":
+    source: "scripts_clang-format.templ"
+    executable: true
+
+  - "<%project-name%>/tests/CMakeLists.txt":
+    source: "tests_cmakelists.templ"
+    condition: "include-tests"
+  - "<%project-name%>/tests/example.cpp":
+    source: "tests_example.templ"
+    condition: "include-tests"
+
+  - "<%project-name%>/.clang-format":
+    source: "root_clang-format.templ"
+    condition: "include-clang-dotfiles"
+  - "<%project-name%>/.clang-tidy":
+    source: "root_clang-tidy.templ"
+    condition: "include-clang-dotfiles"
+
+  - "<%project-name%>/src/<%for(lib : libraries)%>/CMakeLists.txt":
+    source: "lib_cmakelists.templ"
+  - "<%project-name%>/include/<%project-name%>/<%for(lib : libraries)%>":
+    directory: true

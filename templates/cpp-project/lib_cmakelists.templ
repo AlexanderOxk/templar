@@ -1,0 +1,10 @@
+add_library(
+  <%lower(lib)%>
+  PRIVATE
+  # TODO
+)
+
+target_include_directories(
+  <%lower(lib)%>
+  PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../include/"
+)
