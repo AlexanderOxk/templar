@@ -11,9 +11,9 @@ class Lexer {
 public:
     Lexer(std::string_view text) : m_text(text) { processText(); }
 
-    bool syntaxOk() { return !m_encounteredError; }
-    std::string getDiagnostic();
-    const std::vector<Token>& getTokens() { return m_tokens; }
+    bool syntaxOk() const { return !m_encounteredError; }
+    std::string getDiagnostic() const;
+    const std::vector<Token>& getTokens() const { return m_tokens; }
 
 private:
     void processText();
@@ -21,14 +21,14 @@ private:
     void processCodeToken();
     void processPossibleStartToken();
     void makeToken(TokenKind kind);
-    std::string_view currentText();
+    std::string_view currentText() const;
     void advance();
-    char current();
-    char peak();
-    char peak(int offset);
-    bool atEnd();
-    bool matchEndOfTextBlock();
-    bool matchEndOfCodeBlock();
+    char current() const;
+    char peak() const;
+    char peak(int offset) const;
+    bool atEnd() const;
+    bool matchEndOfTextBlock() const;
+    bool matchEndOfCodeBlock() const;
 
     std::string_view m_text;
     std::vector<Token> m_tokens;

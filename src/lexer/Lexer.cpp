@@ -20,7 +20,7 @@ static bool isWhitespace(char c) {
     return (isspace(c));
 }
 
-std::string Lexer::getDiagnostic() {
+std::string Lexer::getDiagnostic() const {
     return std::format("Bad token at {}:{}: '{}', expected [a-zA-Z0-9():!%]", m_line, m_column,
                        current());
 }
@@ -124,7 +124,7 @@ void Lexer::makeToken(TokenKind kind) {
     m_lastEnd = m_current;
 }
 
-std::string_view Lexer::currentText() {
+std::string_view Lexer::currentText() const {
     return m_text.substr(m_lastEnd, m_current - m_lastEnd);
 }
 
@@ -137,17 +137,17 @@ void Lexer::advance() {
     m_current++;
 }
 
-char Lexer::current() {
+char Lexer::current() const {
     if (m_current < m_text.length())
         return m_text.at(m_current);
     return '\0';
 }
 
-char Lexer::peak() {
+char Lexer::peak() const {
     return peak(1);
 }
 
-char Lexer::peak(int offset) {
+char Lexer::peak(int offset) const {
     if (m_current + offset >= 0 && m_current + offset < m_text.length()) {
         return m_text.at(m_current + offset);
     }
@@ -156,17 +156,17 @@ char Lexer::peak(int offset) {
     }
 }
 
-bool Lexer::atEnd() {
+bool Lexer::atEnd() const {
     return m_current >= m_text.length();
 }
 
-bool Lexer::matchEndOfTextBlock() {
+bool Lexer::matchEndOfTextBlock() const {
     return (current() == '\\' && peak() == '\\') ||
            (current() == '\\' && peak(1) == '<' && peak(2) == '%') ||
            (current() == '<' && peak() == '%');
 }
 
-bool Lexer::matchEndOfCodeBlock() {
+bool Lexer::matchEndOfCodeBlock() const {
     return (current() == '%' && peak() == '>');
 }
 
