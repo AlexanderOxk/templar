@@ -21,6 +21,7 @@ enum class TokenKind {
     CodeBlockEnd = 264,
     EscapedCodeBlockStart = 265,
     EscapedBackslash = 266,
+    EndOfFile = 300,
 };
 
 const std::map<std::string_view, TokenKind> keywordToTokenKind = {

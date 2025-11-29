@@ -41,6 +41,8 @@ void Lexer::processText() {
             }
         }
     }
+
+    makeToken(TokenKind::EndOfFile);
 }
 
 void Lexer::processTextToken() {

@@ -54,6 +54,7 @@ void function(bool test) {
         TokenKind::EndIf,
         TokenKind::CodeBlockEnd,
         TokenKind::TextBlock,
+        TokenKind::EndOfFile,
     };
     // clang-format on
 
@@ -83,6 +84,7 @@ TEST_CASE("Start with CodeBlockStart", "[Lexer]") {
         TokenKind::CodeBlockStart,
         TokenKind::EndIf,
         TokenKind::CodeBlockEnd,
+        TokenKind::EndOfFile,
     };
     // clang-format on
 
@@ -111,6 +113,7 @@ TEST_CASE("Not closed code block", "[Lexer]") {
         TokenKind::TextBlock,
         TokenKind::CodeBlockStart,
         TokenKind::EndIf,
+        TokenKind::EndOfFile,
     };
     // clang-format on
 
@@ -124,7 +127,7 @@ TEST_CASE("Not closed code block", "[Lexer]") {
         CHECK(tokens.at(i).kind == expected.at(i));
     }
 
-    CHECK(tokens.back().text == "endif");
+    CHECK(tokens.at(9).text == "endif");
 }
 
 TEST_CASE("Escaped tokens", "[Lexer]") {
@@ -139,6 +142,7 @@ TEST_CASE("Escaped tokens", "[Lexer]") {
         TokenKind::CodeBlockEnd,
         TokenKind::TextBlock,
         TokenKind::EscapedBackslash,
+        TokenKind::EndOfFile,
     };
     // clang-format on
 
@@ -152,23 +156,11 @@ TEST_CASE("Escaped tokens", "[Lexer]") {
         CHECK(tokens.at(i).kind == expected.at(i));
     }
 
-    CHECK(tokens.back().text == "\\\\");
+    CHECK(tokens.at(7).text == "\\\\");
 }
 
 TEST_CASE("Bad syntax", "[Lexer]") {
     const std::string text = R"(<%illegal_var$%>)";
-    // clang-format off
-    constexpr std::array expected = {
-        TokenKind::EscapedCodeBlockStart,
-        TokenKind::TextBlock,
-        TokenKind::EscapedBackslash,
-        TokenKind::CodeBlockStart,
-        TokenKind::Identifier,
-        TokenKind::CodeBlockEnd,
-        TokenKind::TextBlock,
-        TokenKind::EscapedBackslash,
-    };
-    // clang-format on
 
     auto lexer = Lexer(text);
     CHECK_FALSE(lexer.syntaxOk());
